@@ -485,7 +485,13 @@ var pgChart=null;
 var pgExChart=null;
 
 function ld(){
-  try{var s=localStorage.getItem("t60v8");if(s)ST=JSON.parse(s);}catch(e){}
+  // Pre-load seed data if localStorage is empty
+  var seed={"c": {"2026-03-22": "done"}, "se": {}, "cl": {"2026-03-22": {"rk": "3.8", "rt": "25:15", "bk": "16", "bd": "4", "brpm": "75", "bt": "40:15"}}, "no": {"2026-03-22": "Treino muito bom, suei muito, corrida ok e bicicleta quase falhando kakaka, mas é isso aí "}, "body": {"2026-03-22": {"weight": "72.3", "waist": "80", "armL": "37", "armR": "36.5", "thighL": "52", "thighR": "55", "calfL": "37", "calfR": "37.5"}}, "diet": {}, "dietLog": {"2026-03-22": {"waterDone": 8, "extras": [{"name": "Ref de Final de Semana", "cal": 2150, "time": "22:33"}]}}};
+  try{
+    var s=localStorage.getItem("t60v8");
+    if(s){ ST=JSON.parse(s); }
+    else{ ST=seed; localStorage.setItem("t60v8",JSON.stringify(ST)); }
+  }catch(e){ ST=seed; }
   if(!ST.body)ST.body={};
   if(!ST.diet)ST.diet={};
   if(!ST.dietLog)ST.dietLog={};
@@ -1479,11 +1485,11 @@ function buildExtraSection(key, dl){
 
   return '<div class="diet-card">'
     +'<div class="diet-card-title">Extras & Alimentos Adicionais</div>'
-    +'<div style="display:flex;gap:8px;margin-top:10px">'
-    +'<input id="extraName" type="text" placeholder="Nome do alimento..." onclick="this.select()" style="flex:2;background:var(--dark);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;padding:6px 8px;outline:none">'
-    +'<input id="extraKcal" type="number" placeholder="kcal" onclick="this.select()" style="flex:1;background:var(--dark);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;padding:6px 8px;outline:none">'
-    +'<button onclick="addExtra(\''+key+'\')" style="padding:6px 12px;border-radius:6px;background:rgba(212,255,78,.15);border:1px solid rgba(212,255,78,.3);color:var(--acc);font-size:11px;font-weight:700;cursor:pointer">+ Adicionar</button>'
+    +'<div style="display:grid;grid-template-columns:2fr 1fr;gap:8px;margin-top:10px">'
+    +'<input id="extraName" type="text" placeholder="Nome do alimento..." onclick="this.select()" style="background:var(--dark);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;padding:6px 8px;outline:none">'
+    +'<input id="extraKcal" type="number" placeholder="kcal" onclick="this.select()" style="background:var(--dark);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;padding:6px 8px;outline:none">'
     +'</div>'
+    +'<button onclick="addExtra(\''+key+'\')" style="width:100%;margin-top:8px;padding:8px;border-radius:8px;background:rgba(212,255,78,.15);border:1px solid rgba(212,255,78,.4);color:var(--acc);font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.5px">+ ADICIONAR</button>'
     +(totalExtra>0?'<div style="font-size:11px;color:var(--orange);margin-top:6px">Total extras: +'+totalExtra+' kcal</div>':'')
     +'<div style="margin-top:10px;overflow-x:auto"><table style="width:100%;border-collapse:collapse">'
     +'<thead><tr style="color:var(--muted)"><th style="padding:4px 6px;text-align:left;font-size:10px">Alimento</th><th style="text-align:right;font-size:10px">Kcal</th><th style="text-align:right;font-size:10px">Horário</th><th style="font-size:10px"></th></tr></thead>'
